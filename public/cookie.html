@@ -2,17 +2,13 @@
 <html>
 
 <head>
-  <title>Set Cookie</title>
+  <title>Cookies</title>
 </head>
 
 <body>
-  <script>
-    // Set the cookie
-    document.cookie = "your_cookie_name_here=your_cookie_value_here; expires=Thu, 01 Jan 2030 00:00:00 UTC; path=/";
-
-    // Redirect to the main index page
-    window.location.href = "index.html";
-  </script>
+  <h2>Cookies Page</h2>
+  <p>This is a protected page.</p>
+  <p>Here are your cookies: <strong><%= cookies %></strong></p>
 </body>
 
 </html>
