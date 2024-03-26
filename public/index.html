@@ -15,87 +15,42 @@
       height: 100vh;
     }
 
-    .search-container {
+    .login-container {
       text-align: center;
     }
 
-    input[type="text"] {
-      width: 80%;
+    input[type="password"] {
       padding: 10px;
-      border: 2px solid #3F4038;
-      border-radius: 5px;
       font-size: 16px;
-      margin-bottom: 10px;
+    }
+
+    input[type="submit"] {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      background-color: #3F4038;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    input[type="submit"]:hover {
+      background-color: #5B3E38;
     }
   </style>
 </head>
 
 <body>
 
-  <div class="search-container">
-    <form action="no-js" method="get" id="unblocker-form">
-      <input type="text" id="url" name="url" />
+  <div class="login-container">
+    <form action="login.html" method="post" id="login-form">
+      <label for="password">Password:</label>
+      <br>
+      <input type="password" id="password" name="password" />
+      <br>
+      <input type="submit" value="Login" />
     </form>
   </div>
-
-  <script>
-    // Function to check if a cookie exists
-    function getCookie(cookieName) {
-      var name = cookieName + "=";
-      var decodedCookie = decodeURIComponent(document.cookie);
-      var cookieArray = decodedCookie.split(';');
-      for (var i = 0; i < cookieArray.length; i++) {
-        var cookie = cookieArray[i].trim();
-        if (cookie.indexOf(name) == 0) {
-          return cookie.substring(name.length, cookie.length);
-        }
-      }
-      return "";
-    }
-
-    // Check if the specific cookie exists
-    if (!getCookie("your_cookie_name_here")) {
-      // Redirect to the page to set the cookie
-      window.location.href = "cookie.html";
-    }
-
-    function $(id) {
-      return document.getElementById(id);
-    }
-
-    $('unblocker-form').onsubmit = function () {
-      var url = $('url').value;
-      if (url.substr(0, 4) != "http") {
-        // url heuristic: if it has at least one dot and doesn't have any spaces, assume it's a url that just omitted the protocol
-        if (url.includes('.') && !url.includes(' ')) {
-          url = "https://" + url;
-        } else {
-          url = "https://google.com/search?q=" + encodeURIComponent(url);
-        }
-      }
-      window.location = location.protocol + '//' + location.host + '/proxy/' + url;
-      return false;
-    };
-
-    function checkError() {
-      var search = window.location.search;
-      var start = search.indexOf('error=');
-      if (start > -1) {
-        var stop = search.indexOf('&', start);
-        if (stop == -1) { stop = undefined; }
-        // +6 for "error="
-        var err = search.substr(start + 6, stop);
-        var $error = $('error');
-        $error.innerText = $error.textContent = decodeURIComponent(err);
-        $error.style.display = "block";
-      }
-    }
-
-    window.onload = function () {
-      $('url').focus();
-      checkError();
-    }
-  </script>
 
 </body>
 
