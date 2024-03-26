@@ -2,7 +2,7 @@
 <html>
 
 <head>
-  <title>Node Unblocker</title>
+  <title>Free Search...</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <style>
     body {
@@ -22,24 +22,10 @@
     input[type="text"] {
       width: 80%;
       padding: 10px;
-      border: none;
+      border: 2px solid #3F4038;
       border-radius: 5px;
       font-size: 16px;
       margin-bottom: 10px;
-    }
-
-    input[type="submit"] {
-      padding: 10px 20px;
-      border: none;
-      border-radius: 5px;
-      background-color: #3F4038;
-      color: white;
-      font-size: 16px;
-      cursor: pointer;
-    }
-
-    input[type="submit"]:hover {
-      background-color: #5B3E38;
     }
   </style>
 </head>
@@ -48,9 +34,7 @@
 
   <div class="search-container">
     <form action="no-js" method="get" id="unblocker-form">
-      <input type="text" id="url" name="url" placeholder="Enter URL or search term" autofocus="autofocus" />
-      <br>
-      <input type="submit" value="Go" />
+      <input type="text" id="url" name="url" />
     </form>
   </div>
 
