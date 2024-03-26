@@ -4,59 +4,95 @@
 <head>
   <title>Node Unblocker</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <!-- header font -->
-  <link href="//fonts.googleapis.com/css?family=Orbitron" rel="stylesheet" type="text/css">
-
-  <!-- body font -->
-  <link href="//fonts.googleapis.com/css?family=Droid+Sans" rel="stylesheet" type="text/css">
-
-  <style type="text/css">
-    /* fonts */
+  <style>
     body {
-      font-family: 'Droid Sans', arial, serif;
-      letter-spacing: 1px;
+      margin: 0;
+      padding: 0;
+      background-color: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
     }
 
-    h1 {
-      font-family: 'Orbitron', arial, serif;
-      letter-spacing: 2px;
+    .search-container {
+      text-align: center;
     }
 
-    h2,
-    h3,
-    h4,
-    h5,
-    h6 {
-      letter-spacing: 2px;
-      font-weight: normal;
+    input[type="text"] {
+      width: 80%;
+      padding: 10px;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+      margin-bottom: 10px;
     }
 
-    /* colors */
-    body {
-      background-color: #000306;
-      color: white;
-    }
-
-    .container {
+    input[type="submit"] {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
       background-color: #3F4038;
-      border-color: #5B3E38
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
     }
 
-    a {
-      color: #62BECB;
+    input[type="submit"]:hover {
+      background-color: #5B3E38;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="search-container">
+    <form action="no-js" method="get" id="unblocker-form">
+      <input type="text" id="url" name="url" placeholder="Enter URL or search term" autofocus="autofocus" />
+      <br>
+      <input type="submit" value="Go" />
+    </form>
+  </div>
+
+  <script>
+    function $(id) {
+      return document.getElementById(id);
     }
 
-    a:hover {
-      color: #82DEEB
+    $('unblocker-form').onsubmit = function () {
+      var url = $('url').value;
+      if (url.substr(0, 4) != "http") {
+        // url heuristic: if it has at least one dot and doesn't have any spaces, assume it's a url that just omitted the protocol
+        if (url.includes('.') && !url.includes(' ')) {
+          url = "https://" + url;
+        } else {
+          url = "https://google.com/search?q=" + encodeURIComponent(url);
+        }
+      }
+      window.location = location.protocol + '//' + location.host + '/proxy/' + url;
+      return false;
+    };
+
+    function checkError() {
+      var search = window.location.search;
+      var start = search.indexOf('error=');
+      if (start > -1) {
+        var stop = search.indexOf('&', start);
+        if (stop == -1) { stop = undefined; }
+        // +6 for "error="
+        var err = search.substr(start + 6, stop);
+        var $error = $('error');
+        $error.innerText = $error.textContent = decodeURIComponent(err);
+        $error.style.display = "block";
+      }
     }
 
-    #error {
-      border: 1px dotted white;
-      background: brown;
+    window.onload = function () {
+      $('url').focus();
+      checkError();
     }
+  </script>
 
-    /* stripes and borders */
+</body>
 
-    .main {
-      background-repeat: repeat-x;
-      background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAAB9CAIAAADbWVFQAAADd0lEQVR4nO3d6VbbMBiE4Tcm3Tf2tRfSf+393wd03/dCk/6AgjF2otiSvpGsuYBY52HO4JPEMHn+4hl6eTqzPkFbptYHaMnRjLn1GW7muKKyPkMzR5KdOq4AMSxlKaSwxKXQ2axDyZ06ud4liWYdSnbq5IaNPVYqUphjJSSF7WYdSO7Uy+7+mDXrQLJTC6SwwkpRChOsRKWIj5WuFJEHfl9y0V85FyZes/YlO+UuRTSsDKSIg5WHFBE2a09yp173KknYZu1JdqqfFEGxMpMiHFZ+UgTCylKKEAO/K7nob3y0wnOzdiU75UUKv1h5S+ERK3spfG3WjuROvfX928vD6+1Idsq7FMOxxiPFQKxRSTEEa2xS9B74bclFfxf4Dac+L78t2anQUvTAGq0Uq2KNWYqVNmtLcqfeR/wwz/VSW5KdiimFI1aROs/yCxapyyy5ZpGqZ9HAb0ou+ge77991XnlTslOGUnRhFanWtFy/SHWluVkbkjv1UUCKRrM2JDslIkUdq0gtzcVZipRLKoqUc6brkov+SU8K88dRWqMptT7Tw5KVQq1ZylLAVGewPktKPaltuso
+</html>
