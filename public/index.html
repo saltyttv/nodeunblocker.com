@@ -2,7 +2,7 @@
 <html>
 
 <head>
-  <title>Node Unblocker</title>
+  <title> </title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <style>
     body {
@@ -27,40 +27,14 @@
       font-size: 16px;
       margin-bottom: 10px;
     }
-
-    input[type="submit"] {
-      padding: 10px 20px;
-      border: none;
-      border-radius: 5px;
-      background-color: #3F4038;
-      color: white;
-      font-size: 16px;
-      cursor: pointer;
-    }
-
-    input[type="submit"]:hover {
-      background-color: #5B3E38;
-    }
-
-    .password-form {
-      display: none;
-    }
   </style>
 </head>
 
 <body>
 
-  <div class="password-form" id="password-form">
-    <form>
-      <label for="password">Enter password:</label><br>
-      <input type="password" id="password" name="password" /><br>
-      <input type="submit" value="Submit" />
-    </form>
-  </div>
-
-  <div class="search-container" id="search-container" style="display: none;">
+  <div class="search-container">
     <form action="no-js" method="get" id="unblocker-form">
-      <input type="text" id="url" name="url" autofocus="autofocus" />
+      <input type="text" id="url" name="url" />
     </form>
   </div>
 
@@ -69,25 +43,10 @@
       return document.getElementById(id);
     }
 
-    // Function to check password
-    function checkPassword(event) {
-      event.preventDefault();
-      var password = $('password').value;
-      if (password === 'admin') {
-        $('password-form').style.display = 'none';
-        $('search-container').style.display = 'block';
-        $('url').focus();
-      } else {
-        alert('Incorrect password. Please try again.');
-      }
-    }
-
-    // Function to handle search form submission
-    $('unblocker-form').onsubmit = function (event) {
-      event.preventDefault();
+    $('unblocker-form').onsubmit = function () {
       var url = $('url').value;
       if (url.substr(0, 4) != "http") {
-        // URL heuristic: if it has at least one dot and doesn't have any spaces, assume it's a URL that just omitted the protocol
+        // url heuristic: if it has at least one dot and doesn't have any spaces, assume it's a url that just omitted the protocol
         if (url.includes('.') && !url.includes(' ')) {
           url = "https://" + url;
         } else {
@@ -95,10 +54,27 @@
         }
       }
       window.location = location.protocol + '//' + location.host + '/proxy/' + url;
+      return false;
     };
 
-    // Event listener for password form submission
-    $('password-form').addEventListener('submit', checkPassword);
+    function checkError() {
+      var search = window.location.search;
+      var start = search.indexOf('error=');
+      if (start > -1) {
+        var stop = search.indexOf('&', start);
+        if (stop == -1) { stop = undefined; }
+        // +6 for "error="
+        var err = search.substr(start + 6, stop);
+        var $error = $('error');
+        $error.innerText = $error.textContent = decodeURIComponent(err);
+        $error.style.display = "block";
+      }
+    }
+
+    window.onload = function () {
+      $('url').focus();
+      checkError();
+    }
   </script>
 
 </body>
