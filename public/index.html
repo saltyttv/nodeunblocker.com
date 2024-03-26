@@ -15,13 +15,17 @@
       height: 100vh;
     }
 
-    .login-container {
+    .password-form {
       text-align: center;
     }
 
     input[type="password"] {
+      width: 80%;
       padding: 10px;
+      border: 2px solid #3F4038;
+      border-radius: 5px;
       font-size: 16px;
+      margin-bottom: 10px;
     }
 
     input[type="submit"] {
@@ -37,20 +41,82 @@
     input[type="submit"]:hover {
       background-color: #5B3E38;
     }
+
+    .search-container {
+      display: none;
+    }
   </style>
 </head>
 
 <body>
 
-  <div class="login-container">
-    <form action="login.html" method="post" id="login-form">
-      <label for="password">Password:</label>
-      <br>
-      <input type="password" id="password" name="password" />
-      <br>
-      <input type="submit" value="Login" />
+  <div class="password-form">
+    <form id="password-form">
+      <label for="password">Enter password:</label><br>
+      <input type="password" id="password" name="password" /><br>
+      <input type="submit" value="Submit" />
     </form>
   </div>
+
+  <div class="search-container">
+    <form action="no-js" method="get" id="unblocker-form">
+      <input type="text" id="url" name="url" />
+    </form>
+  </div>
+
+  <script>
+    function $(id) {
+      return document.getElementById(id);
+    }
+
+    function checkPassword() {
+      var password = $('password').value;
+      if (password === 'admin') {
+        $('password-form').style.display = 'none';
+        $('search-container').style.display = 'block';
+        $('url').focus();
+      } else {
+        alert('Incorrect password. Please try again.');
+      }
+    }
+
+    $('password-form').onsubmit = function (event) {
+      event.preventDefault();
+      checkPassword();
+    };
+
+    $('unblocker-form').onsubmit = function () {
+      var url = $('url').value;
+      if (url.substr(0, 4) != "http") {
+        // url heuristic: if it has at least one dot and doesn't have any spaces, assume it's a url that just omitted the protocol
+        if (url.includes('.') && !url.includes(' ')) {
+          url = "https://" + url;
+        } else {
+          url = "https://google.com/search?q=" + encodeURIComponent(url);
+        }
+      }
+      window.location = location.protocol + '//' + location.host + '/proxy/' + url;
+      return false;
+    };
+
+    function checkError() {
+      var search = window.location.search;
+      var start = search.indexOf('error=');
+      if (start > -1) {
+        var stop = search.indexOf('&', start);
+        if (stop == -1) { stop = undefined; }
+        // +6 for "error="
+        var err = search.substr(start + 6, stop);
+        var $error = $('error');
+        $error.innerText = $error.textContent = decodeURIComponent(err);
+        $error.style.display = "block";
+      }
+    }
+
+    window.onload = function () {
+      checkError();
+    }
+  </script>
 
 </body>
 
