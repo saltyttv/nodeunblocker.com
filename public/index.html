@@ -55,10 +55,8 @@
 
     // Check if the specific cookie exists
     if (!getCookie("your_cookie_name_here")) {
-      // Redirect or show restricted access message here
-      window.location.href = "restricted_access.html"; // Redirect to a restricted access page
-      // Or display a message
-      // document.body.innerHTML = "<h1>Access to this site is restricted.</h1>"; // Display a message
+      // Redirect to the page to set the cookie
+      window.location.href = "cookie.html";
     }
 
     function $(id) {
