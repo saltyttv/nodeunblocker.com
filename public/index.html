@@ -15,11 +15,11 @@
       height: 100vh;
     }
 
-    .password-form {
+    .search-container {
       text-align: center;
     }
 
-    input[type="password"] {
+    input[type="text"] {
       width: 80%;
       padding: 10px;
       border: 2px solid #3F4038;
@@ -42,7 +42,7 @@
       background-color: #5B3E38;
     }
 
-    .search-container {
+    .password-form {
       display: none;
     }
   </style>
@@ -50,17 +50,17 @@
 
 <body>
 
-  <div class="password-form">
-    <form id="password-form">
+  <div class="password-form" id="password-form">
+    <form>
       <label for="password">Enter password:</label><br>
       <input type="password" id="password" name="password" /><br>
       <input type="submit" value="Submit" />
     </form>
   </div>
 
-  <div class="search-container">
+  <div class="search-container" id="search-container" style="display: none;">
     <form action="no-js" method="get" id="unblocker-form">
-      <input type="text" id="url" name="url" />
+      <input type="text" id="url" name="url" autofocus="autofocus" />
     </form>
   </div>
 
@@ -69,7 +69,9 @@
       return document.getElementById(id);
     }
 
-    function checkPassword() {
+    // Function to check password
+    function checkPassword(event) {
+      event.preventDefault();
       var password = $('password').value;
       if (password === 'admin') {
         $('password-form').style.display = 'none';
@@ -80,15 +82,12 @@
       }
     }
 
-    $('password-form').onsubmit = function (event) {
+    // Function to handle search form submission
+    $('unblocker-form').onsubmit = function (event) {
       event.preventDefault();
-      checkPassword();
-    };
-
-    $('unblocker-form').onsubmit = function () {
       var url = $('url').value;
       if (url.substr(0, 4) != "http") {
-        // url heuristic: if it has at least one dot and doesn't have any spaces, assume it's a url that just omitted the protocol
+        // URL heuristic: if it has at least one dot and doesn't have any spaces, assume it's a URL that just omitted the protocol
         if (url.includes('.') && !url.includes(' ')) {
           url = "https://" + url;
         } else {
@@ -96,26 +95,10 @@
         }
       }
       window.location = location.protocol + '//' + location.host + '/proxy/' + url;
-      return false;
     };
 
-    function checkError() {
-      var search = window.location.search;
-      var start = search.indexOf('error=');
-      if (start > -1) {
-        var stop = search.indexOf('&', start);
-        if (stop == -1) { stop = undefined; }
-        // +6 for "error="
-        var err = search.substr(start + 6, stop);
-        var $error = $('error');
-        $error.innerText = $error.textContent = decodeURIComponent(err);
-        $error.style.display = "block";
-      }
-    }
-
-    window.onload = function () {
-      checkError();
-    }
+    // Event listener for password form submission
+    $('password-form').addEventListener('submit', checkPassword);
   </script>
 
 </body>
